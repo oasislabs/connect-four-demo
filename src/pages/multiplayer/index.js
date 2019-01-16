@@ -70,7 +70,7 @@ const Multiplayer = () => {
 
     return (
       <div style={{ padding: 50 }}>
-        <h1>Two Players (On-Chain)</h1>
+        <h1>Connect Four</h1>
         <Player />
       </div>
     );
