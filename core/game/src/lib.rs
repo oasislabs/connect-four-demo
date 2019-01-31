@@ -46,6 +46,13 @@ pub type Grid = [[i32; 7]; 6];
 pub struct State {
     pub grid: Grid
 }
+impl Default for State {
+    fn default() -> Self {
+        State {
+            grid: [[-1; 7]; 6]
+        }
+    }
+}
 
 fn is_victory (grid: Grid) -> Option<Vec<(usize, usize)>> {
     // Modified version of algorithm by ferdelOlmo: https://stackoverflow.com/a/38211417/129967
@@ -96,9 +103,7 @@ trait Moves {
 #[flow]
 trait Flow {
     fn initial_state(&self) -> State {
-        State {
-            grid: [[-1; 7]; 6]
-        }
+        Default::default()
     }
 
     fn end_turn_if(&self, _: &UserState<State>) -> bool {

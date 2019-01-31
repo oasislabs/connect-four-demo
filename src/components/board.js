@@ -112,7 +112,7 @@ class Board extends React.Component {
     }
 
     let rendered = (
-      <div className="flex flex-column justify-center items-center">
+      <div className="flex flex-column justify-center items-center mt3">
         <table id="board">
           <tbody>{tbody}</tbody>
         </table>
