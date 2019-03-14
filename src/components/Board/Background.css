@@ -1,0 +1,15 @@
+.Background {
+  position: relative;
+  width: 640px;
+  height: 512px;
+/*  background-image: url('../../assets/2x/connect4_board.png');
+  background-size: cover;*/
+}
+
+.Background__image {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  width: 640px;
+  height: 512px;
+}

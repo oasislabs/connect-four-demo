@@ -1,0 +1,45 @@
+.Grid {
+  position: relative;
+  width: 640px;
+  height: 512px;
+  padding: 15px 40px 15px 40px;
+}
+
+.Grid__row {
+  clear: both;
+  padding: 0px;
+  margin: 0px;
+  zoom: 1; /* For IE 6/7 */
+  height: 16.67%;
+}
+
+.Grid__row:before,
+.Grid__row:after {
+  content: '';
+  display: table;
+}
+.Grid__row:after {
+  clear: both;
+}
+
+.Grid__col {
+  display: block;
+  margin: 0px;
+  padding: 0px;
+  float: left;
+  width: 14.285%;
+  height: 100%;
+}
+
+
+.Grid__col--active {
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.Grid__col__token {
+  position: absolute;
+  z-index: 1;
+  top: -45px;
+}
+

@@ -4,16 +4,14 @@ extern crate serde_derive;
 extern crate serde_json;
 #[macro_use]
 extern crate quick_error;
-#[macro_use]
-extern crate lazy_static;
 
-extern crate game_engine;
+extern crate oasis_game_core;
 #[macro_use]
-extern crate game_engine_derive;
+extern crate oasis_game_core_derive;
 
 use serde_json::Value;
-use game_engine::{*, Game as InnerGame};
-use game_engine_derive::{flow, moves};
+use oasis_game_core::{*, Game as InnerGame};
+use oasis_game_core_derive::{flow, moves};
 
 use std::error::Error;
 use std::ops::Range;
@@ -59,27 +57,36 @@ fn is_victory (grid: Grid) -> Option<Vec<(usize, usize)>> {
     for (row_range, col_range, offsets) in VICTORY_TESTS.iter() {
         for row_idx in row_range.clone() {
             for col_idx in col_range.clone() {
-                let mut values = offsets.iter().map(|(x, y)| {
+                let mut first: Option<i32> = None;
+                let mut positions: [(usize, usize); 4] = [(0, 0); 4];
+                let mut win = true; 
+
+                for (i, (x, y)) in offsets.iter().enumerate() {
                     let pos = ((row_idx + x) as usize, (col_idx + y) as usize);
-                    (pos, grid[pos.0][pos.1])
-                });
-                let first = values.nth(0).unwrap().1;
-                if first == -1 {
-                    continue;
+                    positions[i] = pos;
+                    let value = grid[pos.0][pos.1];
+                    if first.is_none() {
+                        first = Some(value);
+                    }
+                    if value == -1 || first != Some(value) {
+                        win = false;
+                        break;
+                    }
                 }
-                if values.all(|(_, value)| value == first){
-                    return Some(values.map(|v| v.0).collect())
+
+                if win {
+                    return Some(positions.to_vec())
                 }
             }
         }
     }
-  None
+   None
 }
 
 /// Define your moves as methods in this trait.
 #[moves]
 trait Moves {
-    fn click_slot(state: &mut UserState<State>, args: &Option<Value>) -> Result<(), Box<Error>> {
+    fn click_slot(state: &mut UserState<State>, player_id: u16, args: &Option<Value>) -> Result<(), Box<Error>> {
         if let Some(value) = args {
             let id = value.as_array()
                 .and_then(|arr| arr.get(0))
@@ -102,7 +109,7 @@ trait Moves {
 /// Define your game flow as methods in this trait.
 #[flow]
 trait Flow {
-    fn initial_state(&self) -> State {
+    fn initial_state(&self, seed: Option<u128>) -> State {
         Default::default()
     }
 
